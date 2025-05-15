@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - Saicom University{% endblock %}
+
+{% block content %}
+<!-- Slider Section -->
+<div class="slider-container">
+    <div class="slider">
+        <div class="slide active" style="background-image: url('{{ url_for('static', filename='images/Brown Simple Aesthetic Desktop Wallpaper-min.png') }}');"></div>
+        <div class="slide" style="background-image: url('{{ url_for('static', filename='images/facebook saicom facing front-Picsart-AiImageEnhancer.jpg') }}');"></div>
+        <div class="slide" style="background-image: url('https://scontent-jnb2-1.xx.fbcdn.net/v/t39.30808-6/495202636_1252737933522242_1349033464368252675_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeGCmb8ai12uY2Ju8cKdsRIUOppANVeOGno6mkA1V44aehBfdH6f18gfcqlH5iQP7X4SAfivtDQ9WBrBuRoM7yCv&_nc_ohc=XhM1MfICc7kQ7kNvwGCb4EN&_nc_oc=AdkEFY4SlKKuK73Pzhn_VXtVWjibXjaztiVQ8fcCc81vTnE48jTjrJYVhwOybWZXaZQ&_nc_zt=23&_nc_ht=scontent-jnb2-1.xx&_nc_gid=6QnNuXHRlaByeBR8gEhDhg&oh=00_AfLhPrAKTmIDXi-GeLEs52XhgFBRs00pqwLgwgaEJHwWMQ&oe=682902D6');"></div>
+        <div class="slide" style="background-image: url('https://scontent-jnb2-1.xx.fbcdn.net/v/t39.30808-6/494855840_1252737803522255_5541516901613952891_n.jpg?stp=cp6_dst-jpg_tt6&_nc_cat=111&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeHvjs7y427ICT68xZLLjUEiwbZ4tkwBrlbBtni2TAGuVt9GgDwJXhrCiWg6SP_yphRpK0YRcM4WlSL5E7RIqydp&_nc_ohc=7Gv-pJCZ2pIQ7kNvwHWY6Jp&_nc_oc=Adki8-xO6G__zqpeM-BPi10ZFC7LuE4cTLvVOlyOFsjto1nSDKpOWowFGxCEyt1UYf8&_nc_zt=23&_nc_ht=scontent-jnb2-1.xx&_nc_gid=WlPObImPMVPeOqiF4ev2Rw&oh=00_AfKYqMwo_KdckPzd12omUHBxQTXBw-hDqz8n34NeJriyYA&oe=6828FB02');"></div>
+    </div>
+
+    <div class="slider-nav">
+        <button class="slider-btn prev">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        <button class="slider-btn next">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+    </div>
+
+    <div class="slider-dots"></div>
+</div>
+
+
+<!-- Welcome Section -->
+<section class="welcome-section">
+    <h1>Welcome to Saicom University</h1>
+    <p>Enhance your technical skills with our comprehensive courses and training programs.</p>
+</section>
+
+<!-- Recently Accessed Courses -->
+<section class="courses-section">
+    <h2>Recently Accessed</h2>
+    <div class="course-grid">
+        <!-- Course Card 1 -->
+        <div class="course-card">
+            <div class="course-image" style="background-image: url('https://t3.ftcdn.net/...jpg');"></div>
+            <div class="course-info">
+                <h3>How To Upload A Course</h3>
+                <p>Step-by-Step Guide on Uploading Courses onto the platform.</p>
+                <div class="course-meta">
+                    <span><i class="fas fa-clock"></i> 1 week</span>
+                    <span><i class="fas fa-user-graduate"></i> Beginner</span>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-bar" style="width: 65%;"></div>
+                    <span>65% Complete</span>
+                </div>
+                <button class="btn-continue">Continue</button>
+            </div>
+        </div>
+
+        <!-- Course Card 2 -->
+        <div class="course-card">
+            <div class="course-image" style="background-image: url('https://media.istockphoto.com/...jpg');"></div>
+            <div class="course-info">
+                <h3>Fiber Optics Installation</h3>
+                <p>Master the techniques for installing and maintaining fiber optic cables.</p>
+                <div class="course-meta">
+                    <span><i class="fas fa-clock"></i> 6 weeks</span>
+                    <span><i class="fas fa-user-graduate"></i> Intermediate</span>
+                </div>
+                <button class="btn-enroll">Begin Course</button>
+            </div>
+        </div>
+
+        <!-- Course Card 3 -->
+        <div class="course-card">
+            <div class="course-image" style="background-image: url('https://therecursive.com/...png');"></div>
+            <div class="course-info">
+                <h3>Telecom Network Security</h3>
+                <p>Protect telecom infrastructure from cyber threats with advanced security measures.</p>
+                <div class="course-meta">
+                    <span><i class="fas fa-clock"></i> 10 weeks</span>
+                    <span><i class="fas fa-user-graduate"></i> Expert</span>
+                </div>
+                <button class="btn-enroll">Begin Course</button>
+            </div>
+        </div>
+
+        <!-- Course Card 4 -->
+        <div class="course-card">
+            <div class="course-image" style="background-image: url('https://therecursive.com/...png');"></div>
+            <div class="course-info">
+                <h3>Installation Fundamentals</h3>
+                <p>The basics of network installation, including configuring network clients.</p>
+                <div class="course-meta">
+                    <span><i class="fas fa-clock"></i> 8 weeks</span>
+                    <span><i class="fas fa-user-graduate"></i> Beginner</span>
+                </div>
+                <button class="btn-enroll">Begin Course</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,312 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saicom Uni - Notifications</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+
+    <main class="notifications-container">
+        <div class="notifications-header">
+            <h1><i class="fas fa-bell"></i> Notifications</h1>
+            <div class="notifications-actions">
+                <button class="btn btn-secondary" id="markAllReadBtn">
+                    <i class="fas fa-check-double"></i> Mark All as Read
+                </button>
+
+            </div>
+        </div>
+
+        <div class="notifications-controls">
+            <div class="filter-controls">
+                <div class="filter-group">
+                    <label for="notificationFilter"><i class="fas fa-filter"></i> Filter by:</label>
+                    <select id="notificationFilter">
+                        <option value="all">All Notifications</option>
+                        <option value="unread">Unread Only</option>
+                        <option value="course">By Course</option>
+                        <option value="type">By Type</option>
+                    </select>
+                </div>
+                <div class="search-group">
+                    <input type="text" placeholder="Search notifications..." id="notificationSearch">
+                    <button><i class="fas fa-search"></i></button>
+                </div>
+            </div>
+
+
+        </div>
+
+        <div class="notifications-list">
+            <!-- Sample Notification Items -->
+            <div class="notification-item unread" data-category="deadline" data-course="fiber-optics">
+                <div class="notification-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="notification-content">
+                    <h3>Assignment Due: Fiber Optics Lab Report</h3>
+                    <p class="notification-meta">
+                        <span class="course-badge">Fiber Optics Installation</span>
+                        <span class="time-ago">Due in 2 days</span>
+                    </p>
+                    <p class="notification-text">
+                        Your lab report for Module 3 is due on Friday, May 24. Click to submit your assignment.
+                    </p>
+                    <div class="notification-actions">
+                        <button class="btn btn-sm btn-primary">Go to Assignment</button>
+                        <button class="btn btn-sm btn-outline mark-as-read">Mark as Read</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="notification-item" data-category="feedback" data-course="network-security">
+                <div class="notification-icon">
+                    <i class="fas fa-comment-alt"></i>
+                </div>
+                <div class="notification-content">
+                    <h3>Feedback Received: Midterm Project</h3>
+                    <p class="notification-meta">
+                        <span class="course-badge">Telecom Network Security</span>
+                        <span class="time-ago">3 hours ago</span>
+                    </p>
+                    <p class="notification-text">
+                        Prof. Johnson has provided feedback on your midterm project. Overall grade: A-
+                    </p>
+                    <div class="notification-actions">
+                        <button class="btn btn-sm btn-primary">View Feedback</button>
+                        <button class="btn btn-sm btn-outline mark-as-unread">Mark as Unread</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="notification-item unread" data-category="course" data-course="5g-fundamentals">
+                <div class="notification-icon">
+                    <i class="fas fa-book"></i>
+                </div>
+                <div class="notification-content">
+                    <h3>New Content Available: 5G Network Architecture</h3>
+                    <p class="notification-meta">
+                        <span class="course-badge">5G Network Fundamentals</span>
+                        <span class="time-ago">Yesterday</span>
+                    </p>
+                    <p class="notification-text">
+                        Module 4 on 5G Network Architecture has been published. Includes new video lectures and reading materials.
+                    </p>
+                    <div class="notification-actions">
+                        <button class="btn btn-sm btn-primary">View Content</button>
+                        <button class="btn btn-sm btn-outline mark-as-read">Mark as Read</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="notification-item" data-category="social" data-course="wireless-communication">
+                <div class="notification-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="notification-content">
+                    <h3>New Discussion Post: Wireless Spectrum Allocation</h3>
+                    <p class="notification-meta">
+                        <span class="course-badge">Wireless Communication</span>
+                        <span class="time-ago">1 day ago</span>
+                    </p>
+                    <p class="notification-text">
+                        Maria Gonzalez posted a new question in the Module 2 discussion forum about spectrum allocation.
+                    </p>
+                    <div class="notification-actions">
+                        <button class="btn btn-sm btn-primary">View Discussion</button>
+                        <button class="btn btn-sm btn-outline mark-as-unread">Mark as Unread</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="notification-item unread" data-category="system">
+                <div class="notification-icon">
+                    <i class="fas fa-cog"></i>
+                </div>
+                <div class="notification-content">
+                    <h3>System Maintenance Scheduled</h3>
+                    <p class="notification-meta">
+                        <span class="time-ago">May 20, 2024</span>
+                    </p>
+                    <p class="notification-text">
+                        The LMS will be undergoing maintenance on Saturday, May 25 from 2:00 AM to 4:00 AM. Please save your work.
+                    </p>
+                    <div class="notification-actions">
+                        <button class="btn btn-sm btn-outline mark-as-read">Mark as Read</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notification Settings Modal -->
+        <div class="modal" id="notificationSettingsModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2><i class="fas fa-cog"></i> Notification Settings</h2>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="notificationSettingsForm">
+                        <div class="settings-section">
+                            <h3>Notification Channels</h3>
+                            <div class="setting-option">
+                                <input type="checkbox" id="enableInApp" checked>
+                                <label for="enableInApp">In-App Notifications</label>
+                            </div>
+                            <div class="setting-option">
+                                <input type="checkbox" id="enableEmail" checked>
+                                <label for="enableEmail">Email Notifications</label>
+                            </div>
+                            <div class="setting-option">
+                                <input type="checkbox" id="enablePush">
+                                <label for="enablePush">Browser Push Notifications</label>
+                            </div>
+                        </div>
+
+                        <div class="settings-section">
+                            <h3>Notification Types</h3>
+                            <div class="setting-option">
+                                <input type="checkbox" id="enableCourseUpdates" checked>
+                                <label for="enableCourseUpdates">Course Content Updates</label>
+                            </div>
+                            <div class="setting-option">
+                                <input type="checkbox" id="enableDeadlines" checked>
+                                <label for="enableDeadlines">Assignment Deadlines</label>
+                            </div>
+                            <div class="setting-option">
+                                <input type="checkbox" id="enableFeedback" checked>
+                                <label for="enableFeedback">Grades & Feedback</label>
+                            </div>
+                            <div class="setting-option">
+                                <input type="checkbox" id="enableSocial" checked>
+                                <label for="enableSocial">Discussion & Social Updates</label>
+                            </div>
+                            <div class="setting-option">
+                                <input type="checkbox" id="enableSystem">
+                                <label for="enableSystem">System Notifications</label>
+                            </div>
+                        </div>
+
+                        <div class="settings-section">
+                            <h3>Notification Frequency</h3>
+                            <div class="setting-option">
+                                <input type="radio" id="frequencyImmediate" name="frequency" value="immediate" checked>
+                                <label for="frequencyImmediate">Immediate</label>
+                            </div>
+                            <div class="setting-option">
+                                <input type="radio" id="frequencyDaily" name="frequency" value="daily">
+                                <label for="frequencyDaily">Daily Digest</label>
+                            </div>
+                            <div class="setting-option">
+                                <input type="radio" id="frequencyWeekly" name="frequency" value="weekly">
+                                <label for="frequencyWeekly">Weekly Digest</label>
+                            </div>
+                        </div>
+
+                        <div class="settings-section">
+                            <h3>Course-Specific Settings</h3>
+                            <div class="course-settings-list">
+                                <div class="course-setting">
+                                    <h4>Fiber Optics Installation</h4>
+                                    <div class="setting-option">
+                                        <input type="checkbox" id="fiberDeadlines" checked>
+                                        <label for="fiberDeadlines">Deadline Reminders</label>
+                                    </div>
+                                    <div class="setting-option">
+                                        <input type="checkbox" id="fiberContent" checked>
+                                        <label for="fiberContent">Content Updates</label>
+                                    </div>
+                                </div>
+                                <div class="course-setting">
+                                    <h4>Telecom Network Security</h4>
+                                    <div class="setting-option">
+                                        <input type="checkbox" id="securityDeadlines" checked>
+                                        <label for="securityDeadlines">Deadline Reminders</label>
+                                    </div>
+                                    <div class="setting-option">
+                                        <input type="checkbox" id="securityContent" checked>
+                                        <label for="securityContent">Content Updates</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary close-modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Save Settings</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Chatbot container -->
+    <div class="chatbot-container">
+        <div class="chatbot-window" id="chatbotWindow">
+            <div class="chatbot-header">
+                <h3>LMS Assistant</h3>
+                <button class="close-chatbot" id="closeChatbot">×</button>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <!-- Messages will appear here -->
+            </div>
+            <div class="chat-input">
+                <input type="text" id="userInput" placeholder="Type your question...">
+                <button class="send-button" id="sendButton">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <button class="chatbot-button" id="chatbotButton">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+        </button>
+    </div>
+
+    <footer>
+      <div class="footer-container">
+          <div class="footer-section">
+              <h3>Saicom University</h3>
+              <p>Empowering aspiring professionals through innovative learning solutions.</p>
+          </div>
+          <div class="footer-section">
+              <h3>Quick Links</h3>
+              <ul>
+                  <li><a href="#">About Us</a></li>
+                  <li><a href="#">Contact</a></li>
+                  <li><a href="#">Help Center</a></li>
+                  <li><a href="#">Privacy Policy</a></li>
+              </ul>
+          </div>
+          <div class="footer-section">
+              <h3>Connect With Us</h3>
+              <div class="social-icons">
+                  <a href="#"><i class="fab fa-facebook"></i></a>
+                  <a href="#"><i class="fab fa-twitter"></i></a>
+                  <a href="#"><i class="fab fa-linkedin"></i></a>
+                  <a href="#"><i class="fab fa-youtube"></i></a>
+              </div>
+          </div>
+      </div>
+      <div class="footer-bottom">
+          <p>&copy; 2025 Saicom University. All rights reserved.</p>
+      </div>
+  </footer>
+
+    <script src="script.js"></script>
+    <script src="notifications.js"></script>
+</body>
+</html>
+{% endblock %}

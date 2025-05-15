@@ -1,0 +1,1044 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saicom Uni - Courses</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+
+    <main class="courses-container">
+        <div class="courses-header">
+            <h1><i class="fas fa-book-open"></i> Course Catalog</h1>
+        </div>
+        <!-- Add this inside your main content section -->
+        <section class="create-course-section" id="createCourseSection" style="display: none;">
+            <div class="course-form-container">
+                <form id="courseForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="courseTitle">Course Title*</label>
+                            <input type="text" id="courseTitle" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="courseCategory">Category*</label>
+                            <select id="courseCategory" required>
+                                <option value="">Select a category</option>
+                                <option value="collaborate">Collaborate</option>
+                                <option value="network">Network</option>
+                                <option value="compute">Compute</option>
+                                <option value="secure">Secure</option>
+                                <option value="mobile">Mobile</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="courseDescription">Description*</label>
+                        <textarea id="courseDescription" rows="4" required></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="courseDuration">Duration (weeks)*</label>
+                            <input type="number" id="courseDuration" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="courseLevel">Level*</label>
+                            <select id="courseLevel" required>
+                                <option value="beginner">Beginner</option>
+                                <option value="intermediate">Intermediate</option>
+                                <option value="advanced">Advanced</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="courseImage">Course Image</label>
+                        <div class="image-upload-container">
+                            <div class="image-preview" id="imagePreview"></div>
+                            <label for="courseImage" class="image-upload-btn">
+                                <i class="fas fa-camera"></i> Choose Image
+                            </label>
+                            <input type="file" id="courseImage" accept="image/*">
+                        </div>
+                    </div>
+
+                    <!-- Enhanced Content Upload Section -->
+                    <div class="content-upload-section">
+                        <h3><i class="fas fa-file-upload"></i> Course Content</h3>
+                        <p class="section-description">Upload PDFs, Word documents, Excel files, and videos for your course</p>
+
+                        <div class="file-type-tabs">
+                            <button type="button" class="file-type-tab active" data-type="all">
+                                <i class="fas fa-file-alt"></i> All Content
+                            </button>
+                            <button type="button" class="file-type-tab" data-type="pdf">
+                                <i class="fas fa-file-pdf"></i> PDFs
+                            </button>
+                            <button type="button" class="file-type-tab" data-type="document">
+                                <i class="fas fa-file-word"></i> Documents
+                            </button>
+                            <button type="button" class="file-type-tab" data-type="spreadsheet">
+                                <i class="fas fa-file-excel"></i> Spreadsheets
+                            </button>
+                            <button type="button" class="file-type-tab" data-type="video">
+                                <i class="fas fa-file-video"></i> Videos
+                            </button>
+                        </div>
+
+                        <div class="file-upload-area">
+                            <div class="drop-zone" id="dropZone">
+                                <div class="drop-zone-content">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <h4>Drag & Drop Files Here</h4>
+                                    <p>Supported formats: PDF, DOCX, XLSX, MP4</p>
+                                    <p class="file-size-limit">Max file size: 100MB</p>
+                                    <button type="button" class="btn btn-outline browse-btn">
+                                        <i class="fas fa-folder-open"></i> Browse Files
+                                    </button>
+                                </div>
+                                <input type="file" id="fileInput" multiple
+                                       accept=".pdf,.doc,.docx,.xls,.xlsx,.mp4,.mov,.avi">
+                            </div>
+
+                            <div class="uploaded-files-container">
+                                <h4><i class="fas fa-file-check"></i> Uploaded Content (3)</h4>
+                                <div class="file-preview-grid" id="filePreview">
+                                    <!-- Files will appear here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" id="cancelCourseBtn">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Save Course
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <div class="courses-tabs">
+            <button class="tab-btn active" data-tab="all-courses">All Courses</button>
+            <button class="tab-btn" data-tab="my-courses">My Courses</button>
+            <button class="tab-btn" data-tab="categories">Categories</button>
+        </div>
+
+        <!-- All Courses Tab -->
+        <div class="tab-content active" id="all-courses">
+            <div class="filter-bar">
+                <div class="filter-group">
+                    <label for="category-filter"><i class="fas fa-filter"></i> Filter by:</label>
+                    <select id="category-filter">
+                        <option value="">Select a category</option>
+                        <option value="collaborate">Collaborate</option>
+                        <option value="network">Network</option>
+                        <option value="compute">Compute</option>
+                        <option value="secure">Secure</option>
+                        <option value="mobile">Mobile</option>
+                    </select>
+                </div>
+                <div class="search-group">
+                    <input type="text" placeholder="Search courses...">
+                    <button><i class="fas fa-search"></i></button>
+                </div>
+            </div>
+
+            <div class="course-grid">
+                <!-- Course cards will be loaded here -->
+                <div class="course-card">
+                    <div class="course-badge">New</div>
+                    <div class="course-image" style="background-image: url('https://media.istockphoto.com/id/1324673285/photo/high-speed-fiber-optic-internet-concept.jpg?s=612x612&w=0&k=20&c=WMyoMH3KlMWTMwlvEfabPlq922PUXWC0lQ2hQkpipGU=')"></div>
+                    <div class="course-info">
+                        <div class="course-category">Collaborate</div>
+                        <h3>Cloud PBX</h3>
+                        <p class="course-description">A business phone system for connecting employees to a telephone network using a managed service running in the cloud.</p>
+                        <div class="course-meta">
+                            <span><i class="fas fa-clock"></i> 6 weeks</span>
+                            <span><i class="fas fa-user-graduate"></i> Intermediate</span>
+                        </div>
+                        <div class="course-actions">
+                            <button class="btn btn-outline"><i class="fas fa-info-circle"></i> Details</button>
+                        <a href="enrolment(fibre optics).html">
+                               <button class="btn btn-primary"><i class="fas fa-play"></i> Enroll</button>
+                        </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="course-card">
+                    <div class="course-image" style="background-image: url('https://therecursive.com/wp-content/uploads/2022/10/USE-THIS-FOR-SOCIAL-MEDIA-1200x628-32.png')"></div>
+                    <div class="course-info">
+                        <div class="course-category">Network</div>
+                        <h3>Business Fibre</h3>
+                        <p class="course-description">A high-speed, reliable internet connection designed specifically for business needs.</p>
+                        <div class="course-meta">
+                            <span><i class="fas fa-clock"></i> 10 weeks</span>
+                            <span><i class="fas fa-user-graduate"></i> Expert</span>
+                        </div>
+                        <div class="course-actions">
+                            <button class="btn btn-outline"><i class="fas fa-info-circle"></i> Details</button>
+                         <a href="enrolment(networksecurity).html">
+                                <button class="btn btn-primary"><i class="fas fa-play"></i> Enroll</button>
+                         </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="course-card">
+                    <div class="course-badge">Popular</div>
+                    <div class="course-image" style="background-image: url('https://t3.ftcdn.net/jpg/04/06/61/76/360_F_406617684_dUn64G8QNFgLl45SoWafl7V4JTwNbFH4.jpg')"></div>
+                    <div class="course-info">
+                        <div class="course-category">5G Compute</div>
+                        <h3>Data Management</h3>
+                        <p class="course-description">The practice of collecting, storing, organizing, and securing data to make it accurate, accessible, and usable for business purposes.</p>
+                        <div class="course-meta">
+                            <span><i class="fas fa-clock"></i> 8 weeks</span>
+                            <span><i class="fas fa-user-graduate"></i> Intermediate</span>
+                        </div>
+                        <div class="course-actions">
+                            <button class="btn btn-outline"><i class="fas fa-info-circle"></i> Details</button>
+                         <a href="enrolment(5G network).html">
+                                <button class="btn btn-primary"><i class="fas fa-play"></i> Enroll</button>
+                         </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="course-card">
+                    <div class="course-badge">Popular</div>
+                    <div class="course-image" style="background-image: url('https://t3.ftcdn.net/jpg/04/06/61/76/360_F_406617684_dUn64G8QNFgLl45SoWafl7V4JTwNbFH4.jpg')"></div>
+                    <div class="course-info">
+                        <div class="course-category">Secure</div>
+                        <h3>VeloCloud SD WAN</h3>
+                        <p class="course-description">A cloud-delivered software-defined wide area network (SD-WAN) solution that optimizes network performance and security for businesses.</p>
+                        <div class="course-meta">
+                            <span><i class="fas fa-clock"></i> 8 weeks</span>
+                            <span><i class="fas fa-user-graduate"></i> Intermediate</span>
+                        </div>
+                        <div class="course-actions">
+                            <button class="btn btn-outline"><i class="fas fa-info-circle"></i> Details</button>
+                         <a href="enrolment(5G network).html">
+                                <button class="btn btn-primary"><i class="fas fa-play"></i> Enroll</button>
+                         </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- My Courses Tab -->
+        <div class="tab-content" id="my-courses">
+            <div class="status-tabs">
+                <button class="status-btn active" data-status="in-progress">In Progress</button>
+                <button class="status-btn" data-status="completed">Completed</button>
+                <button class="status-btn" data-status="not-started">Not Started</button>
+            </div>
+
+            <div class="my-courses-grid">
+                <!-- My courses will be loaded here -->
+                <div class="my-course-card">
+                    <div class="course-progress">
+                        <div class="progress-circle" data-progress="65">
+                            <svg class="progress-ring" width="80" height="80">
+                                <circle class="progress-ring-circle" stroke-width="6" fill="transparent" r="35" cx="40" cy="40"/>
+                            </svg>
+                            <span>65%</span>
+                        </div>
+                    </div>
+                    <div class="course-details">
+                        <h3>VeloCloud SD SD-WAN</h3>
+                        <p class="course-instructor">Instructor: Dr. Sarah Johnson</p>
+                        <div class="course-meta">
+                            <span><i class="fas fa-clock"></i> 12/36 lessons</span>
+                            <span><i class="fas fa-calendar-alt"></i> Ends: 15 Aug 2025</span>
+                        </div>
+                        <div class="course-actions">
+                            <button class="btn btn-primary"><i class="fas fa-play"></i> Continue</button>
+                            <button class="btn btn-outline"><i class="fas fa-chart-bar"></i> Progress</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="my-course-card">
+                    <div class="course-progress">
+                        <div class="progress-circle" data-progress="30">
+                            <svg class="progress-ring" width="80" height="80">
+                                <circle class="progress-ring-circle" stroke-width="6" fill="transparent" r="35" cx="40" cy="40"/>
+                            </svg>
+                            <span>30%</span>
+                        </div>
+                    </div>
+                    <div class="course-details">
+                        <h3>Business Fibre</h3>
+                        <p class="course-instructor">Instructor: Prof. Michael Brown</p>
+                        <div class="course-meta">
+                            <span><i class="fas fa-clock"></i> 6/20 lessons</span>
+                            <span><i class="fas fa-calendar-alt"></i> Ends: 30 Sep 2025</span>
+                        </div>
+                        <div class="course-actions">
+                            <button class="btn btn-primary"><i class="fas fa-play"></i> Continue</button>
+                            <button class="btn btn-outline"><i class="fas fa-chart-bar"></i> Progress</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Categories Tab -->
+        <div class="tab-content" id="categories">
+            <div class="categories-grid">
+                <div class="category-card">
+                    <div class="category-icon">
+                        <i class="fas fa-broadcast-tower"></i>
+                    </div>
+                    <h3>Collaborate</h3>
+                    <p class="course-count">10 courses</p>
+                    <button class="btn btn-outline">View Courses</button>
+                </div>
+
+                <div class="category-card">
+                    <div class="category-icon">
+                        <i class="fa-solid fa-network-wired"></i>
+                    </div>
+                    <h3>Network</h3>
+                    <p class="course-count">3 courses</p>
+                    <button class="btn btn-outline">View Courses</button>
+                </div>
+
+                <div class="category-card">
+                    <div class="category-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Compute</h3>
+                    <p class="course-count">3 courses</p>
+                    <button class="btn btn-outline">View Courses</button>
+                </div>
+
+                <div class="category-card">
+                    <div class="category-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Secure</h3>
+                    <p class="course-count">8 courses</p>
+                    <button class="btn btn-outline">View Courses</button>
+                </div>
+
+                <div class="category-card">
+                    <div class="category-icon">
+                        <i class="fas fa-satellite-dish"></i>
+                    </div>
+                    <h3>Mobile</h3>
+                    <p class="course-count">2 courses</p>
+                    <button class="btn btn-outline">View Courses</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Create Course Modal -->
+        <div class="modal" id="createCourseModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Create New Course</h2>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="courseForm">
+                        <div class="form-group">
+                            <label for="courseTitle">Course Title</label>
+                            <input type="text" id="courseTitle" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="courseCategory">Category</label>
+                            <select id="courseCategory" required>
+                                <option value="">Select a category</option>
+                                <option value="collaborate">Collaborate</option>
+                                <option value="network">Network</option>
+                                <option value="compute">Compute</option>
+                                <option value="secure">Secure</option>
+                                <option value="mobile">Mobile</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="courseDescription">Description</label>
+                            <textarea id="courseDescription" rows="4" required></textarea>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="courseDuration">Duration (weeks)</label>
+                                <input type="number" id="courseDuration" min="1" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="courseLevel">Level</label>
+                                <select id="courseLevel" required>
+                                    <option value="beginner">Beginner</option>
+                                    <option value="intermediate">Intermediate</option>
+                                    <option value="advanced">Advanced</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="courseImage">Course Image</label>
+                            <input type="file" id="courseImage" accept="image/*">
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary close-modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Create Course</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Manage Categories Modal -->
+        <div class="modal" id="manageCategoriesModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Manage Categories</h2>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="category-management">
+                        <div class="existing-categories">
+                            <h3>Existing Categories</h3>
+                            <ul class="category-list">
+                                <li>
+                                    <span>Collaborate</span>
+                                    <div class="category-actions">
+                                        <button class="btn-icon edit-category"><i class="fas fa-edit"></i></button>
+                                        <button class="btn-icon delete-category"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </li>
+                                <li>
+                                    <span>Network</span>
+                                    <div class="category-actions">
+                                        <button class="btn-icon edit-category"><i class="fas fa-edit"></i></button>
+                                        <button class="btn-icon delete-category"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </li>
+                                <li>
+                                    <span>Compute</span>
+                                    <div class="category-actions">
+                                        <button class="btn-icon edit-category"><i class="fas fa-edit"></i></button>
+                                        <button class="btn-icon delete-category"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </li>
+                                <li>
+                                    <span>Secure</span>
+                                    <div class="category-actions">
+                                        <button class="btn-icon edit-category"><i class="fas fa-edit"></i></button>
+                                        <button class="btn-icon delete-category"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </li>
+                                <li>
+                                    <span>Mobile</span>
+                                    <div class="category-actions">
+                                        <button class="btn-icon edit-category"><i class="fas fa-edit"></i></button>
+                                        <button class="btn-icon delete-category"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="add-category">
+                            <h3>Add New Category</h3>
+                            <form id="categoryForm">
+                                <div class="form-group">
+                                    <label for="categoryName">Category Name</label>
+                                    <input type="text" id="categoryName" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="categoryIcon">Icon (Font Awesome class)</label>
+                                    <input type="text" id="categoryIcon" placeholder="fas fa-icon-name">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Add Category</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Chatbot container -->
+    <div class="chatbot-container">
+        <div class="chatbot-window" id="chatbotWindow">
+            <div class="chatbot-header">
+                <h3>LMS Assistant</h3>
+                <button class="close-chatbot" id="closeChatbot">×</button>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <!-- Messages will appear here -->
+            </div>
+            <div class="chat-input">
+                <input type="text" id="userInput" placeholder="Type your question...">
+                <button class="send-button" id="sendButton">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <button class="chatbot-button" id="chatbotButton">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+        </button>
+    </div>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>Saicom University</h3>
+                <p>Empowering aspiring professionals through innovative learning solutions.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="calendar.html">Dashboard</a></li>
+                    <li><a href="courses.html">Courses</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Connect With Us</h3>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Saicom University. All rights reserved.</p>
+        </div>
+    </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+    // Tab functionality
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            // Remove active class from all buttons and contents
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            tabContents.forEach(content => content.classList.remove('active'));
+
+            // Add active class to clicked button and corresponding content
+            button.classList.add('active');
+            const tabId = button.getAttribute('data-tab');
+            document.getElementById(tabId).classList.add('active');
+        });
+    });
+
+    // Status tabs in My Courses
+    const statusButtons = document.querySelectorAll('.status-btn');
+    statusButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            statusButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            // In a real app, you would filter courses here
+        });
+    });
+
+    // Modal functionality
+    const createCourseBtn = document.getElementById('createCourseBtn');
+    const manageCategoriesBtn = document.getElementById('manageCategoriesBtn');
+    const createCourseModal = document.getElementById('createCourseModal');
+    const manageCategoriesModal = document.getElementById('manageCategoriesModal');
+    const closeModalButtons = document.querySelectorAll('.close-modal');
+
+    createCourseBtn.addEventListener('click', () => {
+        createCourseModal.classList.add('active');
+        //When I click on the course button i should a list of courses
+
+    });
+
+    manageCategoriesBtn.addEventListener('click', () => {
+        manageCategoriesModal.classList.add('active');
+    });
+
+    closeModalButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            createCourseModal.classList.remove('active');
+            manageCategoriesModal.classList.remove('active');
+        });
+    });
+
+    // Close modal when clicking outside
+    window.addEventListener('click', (e) => {
+        if (e.target === createCourseModal) {
+            createCourseModal.classList.remove('active');
+        }
+        if (e.target === manageCategoriesModal) {
+            manageCategoriesModal.classList.remove('active');
+        }
+    });
+
+    // Initialize circular progress bars
+    const progressCircles = document.querySelectorAll('.progress-circle');
+    progressCircles.forEach(circle => {
+        const progress = circle.getAttribute('data-progress');
+        const circleElement = circle.querySelector('.progress-ring-circle');
+        circleElement.style.setProperty('--progress', progress);
+    });
+
+    // Form submissions (prevent default for demo)
+    document.getElementById('courseForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        alert('Course creation would be handled here in a real application');
+        this.reset();
+        createCourseModal.classList.remove('active');
+    });
+
+    document.getElementById('categoryForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        alert('Category creation would be handled here in a real application');
+        this.reset();
+    });
+
+    // Edit/delete category buttons
+    document.querySelectorAll('.edit-category').forEach(button => {
+        button.addEventListener('click', function() {
+            alert('Edit category functionality would go here');
+        });
+    });
+
+    document.querySelectorAll('.delete-category').forEach(button => {
+        button.addEventListener('click', function() {
+            if (confirm('Are you sure you want to delete this category?')) {
+                alert('Category deletion would be handled here');
+            }
+        });
+    });
+});
+
+// Course Creation and Content Upload
+document.addEventListener('DOMContentLoaded', function() {
+    const createCourseBtn = document.getElementById('createCourseBtn');
+    const createCourseSection = document.getElementById('createCourseSection');
+    const cancelCourseBtn = document.getElementById('cancelCourseBtn');
+
+    // Toggle course creation form
+    if (createCourseBtn && createCourseSection) {
+        createCourseBtn.addEventListener('click', function() {
+            createCourseSection.style.display = 'block';
+            window.scrollTo({
+                top: createCourseSection.offsetTop - 20,
+                behavior: 'smooth'
+            });
+        });
+
+        cancelCourseBtn.addEventListener('click', function() {
+            createCourseSection.style.display = 'none';
+        });
+    }
+
+    // Image Preview
+    const imagePreview = document.getElementById('imagePreview');
+    const courseImageInput = document.getElementById('courseImage');
+
+    if (courseImageInput && imagePreview) {
+        courseImageInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreview.innerHTML = `<img src="${e.target.result}" alt="Course preview">`;
+                    imagePreview.querySelector('img').style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+
+    // File Upload Functionality
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const filePreview = document.getElementById('filePreview');
+    const fileTypeTabs = document.querySelectorAll('.file-type-tab');
+
+    // Click to browse files
+    if (dropZone && fileInput) {
+        dropZone.addEventListener('click', function(e) {
+            if (e.target.closest('.browse-btn')) {
+                fileInput.click();
+            }
+        });
+    }
+
+    // Handle drag and drop
+    if (dropZone) {
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight() {
+            dropZone.classList.add('drag-over');
+        }
+
+        function unhighlight() {
+            dropZone.classList.remove('drag-over');
+        }
+
+        // Handle file drop
+        dropZone.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            handleFiles(files);
+        }
+    }
+
+    // Handle file selection
+    if (fileInput) {
+        fileInput.addEventListener('change', function() {
+            handleFiles(this.files);
+        });
+    }
+
+    // Process selected files
+    function handleFiles(files) {
+        [...files].forEach(file => {
+            if (validateFile(file)) {
+                previewFile(file);
+            } else {
+                alert(`File type not supported: ${file.name}`);
+            }
+        });
+    }
+
+    // Validate file types and size
+    function validateFile(file) {
+        const validTypes = [
+            'application/pdf',
+            'application/msword',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'application/vnd.ms-excel',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'video/mp4',
+            'video/quicktime',
+            'video/x-msvideo'
+        ];
+
+        const maxSize = 100 * 1024 * 1024; // 100MB
+
+        return validTypes.includes(file.type) && file.size <= maxSize;
+    }
+
+    // Preview uploaded files
+    function previewFile(file) {
+        const fileCard = createFileCard(file);
+        filePreview.appendChild(fileCard);
+        updateFileCount();
+    }
+
+    // Create file card element
+    function createFileCard(file) {
+        const fileType = getFileType(file);
+        const fileCard = document.createElement('div');
+        fileCard.className = 'file-card';
+        fileCard.dataset.type = fileType;
+
+        fileCard.innerHTML = `
+            <div class="file-icon ${fileType}">
+                ${getFileIcon(fileType)}
+            </div>
+            <div class="file-info">
+                <div class="file-name" title="${file.name}">${file.name}</div>
+                <div class="file-meta">
+                    <span>${formatFileSize(file.size)}</span>
+                    <span>${fileType.toUpperCase()}</span>
+                </div>
+            </div>
+            <button class="remove-file" title="Remove file">
+                <i class="fas fa-times"></i>
+            </button>
+        `;
+
+        // Add remove functionality
+        fileCard.querySelector('.remove-file').addEventListener('click', function() {
+            fileCard.remove();
+            updateFileCount();
+        });
+
+        return fileCard;
+    }
+
+    // Helper functions
+    function getFileType(file) {
+        if (file.type.includes('pdf')) return 'pdf';
+        if (file.type.includes('word')) return 'document';
+        if (file.type.includes('excel') || file.type.includes('spreadsheet')) return 'spreadsheet';
+        if (file.type.includes('video')) return 'video';
+        return 'other';
+    }
+
+    function getFileIcon(fileType) {
+        const icons = {
+            pdf: '<i class="fas fa-file-pdf"></i>',
+            document: '<i class="fas fa-file-word"></i>',
+            spreadsheet: '<i class="fas fa-file-excel"></i>',
+            video: '<i class="fas fa-file-video"></i>',
+            other: '<i class="fas fa-file"></i>'
+        };
+        return icons[fileType] || icons.other;
+    }
+
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+    }
+
+    function updateFileCount() {
+        const count = filePreview.children.length;
+        const countElement = document.querySelector('.uploaded-files-container h4');
+        if (countElement) {
+            countElement.innerHTML = `<i class="fas fa-file-check"></i> Uploaded Content (${count})`;
+        }
+    }
+
+    // File type filtering
+    fileTypeTabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            const type = this.dataset.type;
+
+            // Update active tab
+            fileTypeTabs.forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+
+            // Filter files
+            filterFiles(type);
+        });
+    });
+
+    function filterFiles(type) {
+        const files = filePreview.querySelectorAll('.file-card');
+
+        files.forEach(file => {
+            if (type === 'all' || file.dataset.type === type) {
+                file.style.display = 'flex';
+            } else {
+                file.style.display = 'none';
+            }
+        });
+    }
+
+    // Form submission
+    const courseForm = document.getElementById('courseForm');
+    if (courseForm) {
+        courseForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Collect form data
+            const formData = {
+                title: document.getElementById('courseTitle').value,
+                category: document.getElementById('courseCategory').value,
+                description: document.getElementById('courseDescription').value,
+                duration: document.getElementById('courseDuration').value,
+                level: document.getElementById('courseLevel').value,
+                files: Array.from(filePreview.children).map(file => {
+                    return {
+                        name: file.querySelector('.file-name').textContent,
+                        type: file.dataset.type,
+                        size: file.querySelector('.file-meta span').textContent
+                    };
+                })
+            };
+
+            // In a real app, you would upload files to server here
+            console.log('Course data:', formData);
+            alert('Course created successfully! (In a real app, this would save to your database)');
+
+            // Reset form
+            this.reset();
+            imagePreview.innerHTML = '';
+            filePreview.innerHTML = '';
+            updateFileCount();
+            createCourseSection.style.display = 'none';
+        });
+    }
+});
+
+ // DOM elements
+ const chatbotButton = document.getElementById('chatbotButton');
+ const closeChatbot = document.getElementById('closeChatbot');
+ const chatbotWindow = document.getElementById('chatbotWindow');
+ const chatMessages = document.getElementById('chatMessages');
+ const userInput = document.getElementById('userInput');
+ const sendButton = document.getElementById('sendButton');
+
+ // Knowledge base for the chatbot
+ const knowledgeBase = {
+     "hello": "Hello! How can I help you with your LMS today?",
+     "hi": "Hi there! What can I assist you with?",
+     "how to submit assignment": "To submit an assignment: 1. Go to the 'Assignments' section 2. Click on the assignment you want to submit 3. Upload your file 4. Click 'Submit'",
+     "where are my grades": "You can find your grades in the 'Grades' section of your course. Click on the course, then look for the 'Grades' tab in the navigation.",
+     "course materials": "Course materials are available in each course's 'Materials' or 'Resources' section. If you can't find something specific, try using the search function.",
+     "technical issues": "For technical issues, please try: 1. Refreshing the page 2. Clearing your browser cache 3. Trying a different browser. If problems persist, contact IT support.",
+     "deadline extension": "For deadline extensions, please contact your instructor directly through the messaging system with your request and reason.",
+     "reset password": "To reset your password: 1. Click 'Forgot password' on the login page 2. Follow the instructions sent to your email 3. Create a new password",
+     "contact instructor": "You can contact your instructor by: 1. Going to the 'People' section in your course 2. Finding your instructor's name 3. Clicking the 'Message' button next to their name",
+     "enrollment issues": "For enrollment issues, please contact the registrar's office or your academic advisor.",
+     "default": "I'm sorry, I don't understand that question. Could you try rephrasing it? Here are some things I can help with: assignments, grades, course materials, technical issues, or contacting instructors."
+ };
+
+ // Common questions for quick replies
+ const quickReplies = [
+     "How to submit assignment?",
+     "Where are my grades?",
+     "Course materials",
+     "Technical issues",
+     "Contact instructor"
+ ];
+
+ // Toggle chatbot window
+ chatbotButton.addEventListener('click', () => {
+     chatbotWindow.style.display = 'flex';
+     chatbotButton.style.display = 'none';
+     // Add welcome message if first time opening
+     if (chatMessages.children.length === 0) {
+         addBotMessage("Hello! I'm your LMS assistant. How can I help you today?");
+         showQuickReplies();
+     }
+ });
+
+ closeChatbot.addEventListener('click', () => {
+     chatbotWindow.style.display = 'none';
+     chatbotButton.style.display = 'flex';
+ });
+
+ // Send message function
+ function sendMessage() {
+     const message = userInput.value.trim();
+     if (message !== '') {
+         addUserMessage(message);
+         userInput.value = '';
+         processUserInput(message);
+     }
+ }
+
+ // Send message on button click or Enter key
+ sendButton.addEventListener('click', sendMessage);
+ userInput.addEventListener('keypress', (e) => {
+     if (e.key === 'Enter') {
+         sendMessage();
+     }
+ });
+
+ // Add user message to chat
+ function addUserMessage(text) {
+     const messageDiv = document.createElement('div');
+     messageDiv.classList.add('message', 'user-message');
+     messageDiv.textContent = text;
+     chatMessages.appendChild(messageDiv);
+     chatMessages.scrollTop = chatMessages.scrollHeight;
+ }
+
+ // Add bot message to chat
+ function addBotMessage(text) {
+     // Remove typing indicator if present
+     const typingIndicator = document.querySelector('.typing-indicator');
+     if (typingIndicator) {
+         typingIndicator.remove();
+     }
+
+     const messageDiv = document.createElement('div');
+     messageDiv.classList.add('message', 'bot-message');
+     messageDiv.textContent = text;
+     chatMessages.appendChild(messageDiv);
+     chatMessages.scrollTop = chatMessages.scrollHeight;
+ }
+
+ // Show typing indicator
+ function showTypingIndicator() {
+     const typingDiv = document.createElement('div');
+     typingDiv.classList.add('typing-indicator');
+     typingDiv.innerHTML = `
+         <div class="typing-dot"></div>
+         <div class="typing-dot"></div>
+         <div class="typing-dot"></div>
+     `;
+     chatMessages.appendChild(typingDiv);
+     chatMessages.scrollTop = chatMessages.scrollHeight;
+ }
+
+ // Show quick reply buttons
+ function showQuickReplies() {
+     const quickRepliesDiv = document.createElement('div');
+     quickRepliesDiv.classList.add('quick-replies');
+
+     quickReplies.forEach(reply => {
+         const button = document.createElement('button');
+         button.classList.add('quick-reply');
+         button.textContent = reply;
+         button.addEventListener('click', () => {
+             addUserMessage(reply);
+             processUserInput(reply);
+         });
+         quickRepliesDiv.appendChild(button);
+     });
+
+     chatMessages.appendChild(quickRepliesDiv);
+     chatMessages.scrollTop = chatMessages.scrollHeight;
+ }
+
+ // Process user input and generate response
+ function processUserInput(input) {
+     showTypingIndicator();
+
+     // Simulate processing delay
+     setTimeout(() => {
+         const lowerInput = input.toLowerCase();
+         let response = knowledgeBase.default;
+
+         // Check for matching questions
+         for (const [question, answer] of Object.entries(knowledgeBase)) {
+             if (lowerInput.includes(question.toLowerCase())) {
+                 response = answer;
+                 break;
+             }
+         }
+
+         addBotMessage(response);
+         showQuickReplies();
+     }, 1000);
+ }
+    </script>
+
+    <script src="courses.js"></script>
+</body>
+</html>
+{% endblock %}

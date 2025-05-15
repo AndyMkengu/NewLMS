@@ -1,0 +1,32 @@
+<!-- templates/add_event.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Event</title>
+</head>
+<body>
+    <h1>Add New Event</h1>
+    <form action="{{ url_for('add_event_form') }}" method="POST">
+        <label>Title:</label>
+        <input type="text" name="title" required><br>
+
+        <label>Start:</label>
+        <input type="datetime-local" name="start" required><br>
+
+        <label>End:</label>
+        <input type="datetime-local" name="end"><br>
+
+        <label>Color:</label>
+        <input type="color" name="color" value="#162e6b"><br>
+
+        <label>Type:</label>
+        <input type="text" name="event_type" placeholder="e.g. assignment, exam"><br>
+
+        <label>Course:</label>
+        <input type="text" name="course" placeholder="Course name"><br>
+
+        <button type="submit">Add Event</button>
+    </form>
+</body>
+</html>
